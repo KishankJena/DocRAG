@@ -10,7 +10,7 @@
 import os
 from typing import List, Tuple
 from pypdf import PdfReader
-from langchain.text_splitters import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 
 from app.utils.config import get_settings
