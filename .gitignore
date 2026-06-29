@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL support
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.swo
+*.swp
+
+# Virtual Environment (Python)
+.venv/
+venv/
+ENV/
+env/
+
+# Environment configuration
+.env
+!.env.example
+
+# Project-specific data directories
+uploads/
+chroma_db/
+
+# Testing caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE / Editor configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS generated files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
