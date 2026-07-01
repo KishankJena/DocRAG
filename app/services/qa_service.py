@@ -213,7 +213,8 @@ class QAService:
             question=question,
             answer=answer.strip(),
             source_chunks=source_chunks,
-            model_used=settings.openai_model if not settings.use_local_llm else "local-llama",
+            # model_used=settings.openai_model if not settings.use_local_llm else "local-llama",
+            model_used=settings.llm_model,
             total_chunks_searched=len(raw_results),
             response_time_seconds=elapsed,
         )
