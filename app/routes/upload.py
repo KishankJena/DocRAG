@@ -14,6 +14,7 @@ from fastapi.responses import JSONResponse
 from app.models.schemas import UploadResponse
 from app.services.pdf_service import process_pdf
 from app.services.vector_store import VectorStoreService, get_vector_store_service
+from app.utils.auth import get_current_user
 from app.utils.config import get_settings
 from app.utils.logger import get_logger
 from app.utils.helpers import generate_document_id, get_file_size_mb, ensure_directory, is_valid_pdf
@@ -32,6 +33,7 @@ router = APIRouter()
 )
 async def upload_pdf(
     file: UploadFile = File(..., description="A PDF file to upload"),
+    current_user: dict = Depends(get_current_user),
     vector_store: VectorStoreService = Depends(get_vector_store_service),
 ):
     """

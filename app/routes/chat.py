@@ -10,6 +10,7 @@ from app.models.schemas import QuestionRequest, QuestionResponse
 from app.services.qa_service import QAService, get_qa_service
 from app.services.vector_store import VectorStoreService, get_vector_store_service
 from app.utils.logger import get_logger
+from app.utils.auth import get_current_user
 
 logger = get_logger(__name__)
 
@@ -29,6 +30,7 @@ async def ask_question(
     request: QuestionRequest,
     qa_service: QAService = Depends(get_qa_service),
     vector_store: VectorStoreService = Depends(get_vector_store_service),
+    current_user: dict = Depends(get_current_user),
 ):
     """
     RAG Query Pipeline:

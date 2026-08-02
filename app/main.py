@@ -13,7 +13,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.routes import upload, chat, documents, health
+from app.routes import upload, chat, documents, health, auth
 from app.utils.config import get_settings
 from app.utils.logger import get_logger
 from app.utils.helpers import ensure_directory
@@ -94,6 +94,7 @@ app.include_router(health.router, prefix=API_PREFIX, tags=["Health"])
 app.include_router(upload.router, prefix=API_PREFIX, tags=["Documents"])
 app.include_router(documents.router, prefix=API_PREFIX, tags=["Documents"])
 app.include_router(chat.router, prefix=API_PREFIX, tags=["Chat"])
+app.include_router(auth.router, prefix=f"{API_PREFIX}/auth", tags=["Authentication"])
 
 
 # ============================================================

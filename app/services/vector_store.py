@@ -85,7 +85,8 @@ class VectorStoreService:
             embedding_function=self.embeddings,
         )
 
-    def add_documents(self, chunks: List[Document], document_id: str) -> int:
+    # def add_documents(self, chunks: List[Document], document_id: str) -> int:
+    def add_documents(self, chunks: List[Document], document_id: str, owner_id: str) -> int:
         """
         Embed chunks and store them in ChromaDB.
 
@@ -101,6 +102,8 @@ class VectorStoreService:
         Returns:
             Number of chunks successfully stored
         """
+        for chunk in chunks:
+            chunk.metadata["owner_id"] = owner_id
         logger.info(f"Embedding and storing {len(chunks)} chunks for document '{document_id}'")
 
         vector_store = self._get_vector_store()
@@ -124,10 +127,7 @@ class VectorStoreService:
         return len(chunks)
 
     def similarity_search(
-        self,
-        query: str,
-        top_k: int = 4,
-        document_id: Optional[str] = None
+        self, query: str, top_k: int = 3, document_id: Optional[str] = None, owner_id: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         """
         Find the most semantically similar chunks for a query.
@@ -145,6 +145,16 @@ class VectorStoreService:
         Returns:
             List of dicts with 'content', 'metadata', 'similarity_score'
         """
+        # Build metadata filter for ChromaDB
+        where_filter = {}
+        if owner_id:
+            where_filter["owner_id"] = {"$eq": owner_id}
+        if document_id:
+            where_filter["document_id"] = {"$eq": document_id}
+
+        results = vector_store.similarity_search_with_relevance_scores(
+            query=query, k=top_k, filter=where_filter if where_filter else None
+        )
         logger.info(f"Searching for: '{query[:80]}...' | top_k={top_k}")
 
         vector_store = self._get_vector_store()

@@ -22,7 +22,12 @@ class Settings(BaseSettings):
 
     # --- ChromaDB ---
     chroma_db_path: str = Field(default="./chroma_db", description="Persistence path for ChromaDB")
-
+    
+    # --- JWT Security ---
+    jwt_secret_key: str = Field(default="YOUR_SUPER_SECRET_KEY_CHANGE_THIS_IN_PRODUCTION")
+    jwt_algorithm: str = Field(default="HS256")
+    access_token_expire_minutes: int = Field(default=30)
+    
     # --- File Upload ---
     upload_dir: str = Field(default="./uploads", description="Where uploaded PDFs are saved")
     max_file_size_mb: int = Field(default=50, description="Max upload size in MB")
@@ -66,3 +71,4 @@ def get_settings() -> Settings:
     lru_cache means we only read from .env once — good for performance.
     """
     return Settings()
+
