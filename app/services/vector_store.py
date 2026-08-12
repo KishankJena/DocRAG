@@ -151,6 +151,8 @@ class VectorStoreService:
             where_filter["owner_id"] = {"$eq": owner_id}
         if document_id:
             where_filter["document_id"] = {"$eq": document_id}
+            
+        vector_store = self._get_vector_store()
 
         results = vector_store.similarity_search_with_relevance_scores(
             query=query, k=top_k, filter=where_filter if where_filter else None

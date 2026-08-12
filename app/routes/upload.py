@@ -42,11 +42,11 @@ async def upload_pdf(
     2. Save to uploads/ directory
     3. Extract text from PDF pages
     4. Split into overlapping chunks
-    5. Generate embeddings and store in ChromaDB
+    5. Generate embeddings and store in ChromaDB tagged with owner_id
     6. Return success response with chunk count
     """
     start_time = time.time()
-    logger.info(f"Upload request received: {file.filename}")
+    logger.info(f"Upload request received: {file.filename} (user: {current_user['username']})")
 
     # --- Validation: File type ---
     if not is_valid_pdf(file.filename):
@@ -59,7 +59,6 @@ async def upload_pdf(
     ensure_directory(settings.upload_dir)
 
     # --- Save uploaded file to disk ---
-    # We save to disk first, then read it with pypdf
     document_id = generate_document_id(file.filename)
     save_path = os.path.join(settings.upload_dir, f"{document_id}.pdf")
 
@@ -99,7 +98,12 @@ async def upload_pdf(
 
     # --- Embed + Store in ChromaDB ---
     try:
-        total_chunks = vector_store.add_documents(chunks, document_id)
+        # Pass owner_id from the authenticated user down to vector_store
+        total_chunks = vector_store.add_documents(
+            chunks=chunks,
+            document_id=document_id,
+            owner_id=current_user["user_id"]
+        )
     except Exception as e:
         os.remove(save_path)
         logger.error(f"Embedding/storage failed: {e}")
